@@ -6,7 +6,7 @@
 # respectively, while the number of swaps for the simulated 
 # unliganded MITF:DNA is on average 164. 
 
-setwd("/Users/brynr/Desktop/mitf_paper/MITF_revisions")
+setwd("./MITF_MD")
 source("utils.R")
 
 
@@ -14,9 +14,6 @@ source("utils.R")
 
 data_dirs <- paste0("./distance_files05072025/", 
        list.files("./distance_files05072025"))
-
-#data_dirs <- paste0("./distance_files_noions/",
-#                    list.files("./distance_files_noions"))
 
 helix1_data <- data.frame(lapply(data_dirs, function(x) {
   f1 <- read.delim(paste0(x,"/helix1.out"), skip=0,
@@ -32,9 +29,6 @@ helix2_data <- data.frame(lapply(data_dirs, function(x) {
   as.numeric(f1$V2)
 }))
 
-#base_names = c("1bzkq_o1_noions", 
-#               "1gybv_o2_noions",
-#               "mitf_nolig_noions")
 
 base_names = c("c8_o1_nodna", "c8_o1_withdna",
                "c8_o2_nodna", "c8_o2_withdna",
@@ -53,7 +47,7 @@ all_helix_data <- all_helix_data[rep(1:length(base_names),
 
 my_palette <- colorRampPalette(c("blue", "white", "red"))(n = 50)
 truncate_first <- create_truncated_indices(500)
-pdf("correlation_heatmap.pdf", width=6, height=6)
+pdf("figs/correlation_heatmap.pdf", width=6, height=6)
 pheatmap(cor(apply(all_helix_data[truncate_first,],
              2, rolling_average, 50)),
          cluster_rows=FALSE, cluster_cols=FALSE,
@@ -95,7 +89,9 @@ for (base_name in base_names) {
       ggtitle(paste0("Helix length trace for ", title_str)) +
       theme_pubr()
     print(p)
-    ggsave(paste0(base_name, "_run_", run_num, "_helix_trace.pdf"), width = 8, height = 3)
+    ggsave(paste0("figs/", base_name, "_run_", 
+                  run_num, "_helix_trace.pdf"), 
+           width = 8, height = 3)
   }
   
   # count crossings per run
@@ -151,7 +147,7 @@ p <- ggplot(ggplot_reshaped, aes(x=DNA, y=swaps)) +
            label.size=6,
            tip.length=0.02)
 print(p)
-ggsave("swaps_by_DNA.pdf", width = 5, height = 4)
+ggsave("figs/swaps_by_DNA.pdf", width = 5, height = 4)
 
 ggplot_reshaped$compound_and_orientation = paste0(
   ggplot_reshaped$compound, "_", ggplot_reshaped$orientation
@@ -186,6 +182,6 @@ p <- ggplot(ggplot_reshaped, aes(x=compound_and_orientation,
   )
 print(p)
 
-ggsave("swaps_by_compound.pdf", width = 6, height = 4)
+ggsave("figs/swaps_by_compound.pdf", width = 6, height = 4)
 
 dev.off()
