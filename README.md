@@ -8,7 +8,7 @@ Compound **8** shown in orange (in orientation 1)
 
 ## Contents
 
-`distance_files05072025/`: Helix trace files
+`Source_Data/`: Helix trace files
 
 `mitf_analyses.R`: All computational analyses (incl statistical analyses) and figures for the paper
 

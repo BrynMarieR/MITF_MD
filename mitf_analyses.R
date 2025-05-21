@@ -1,17 +1,14 @@
-#### HELPER FUNCTIONS
+#### INITIAL SET-UP
+# Bryn Reimer
+# May 2025
 
-# On average, the slow-down is more dramatic for the 
-# MITF:DNA:7 simulated complex than for the MITF:DNA:8 
-# complex, with an average number of swaps of 66 and 144, 
-# respectively, while the number of swaps for the simulated 
-# unliganded MITF:DNA is on average 164. 
-
-setwd("./MITF_MD")
+# import libraries, helper functions
 source("utils.R")
 
 
 #### LOGIC
 
+# read in the data for each helix trace
 data_dirs <- paste0("./distance_files05072025/", 
        list.files("./distance_files05072025"))
 
@@ -45,8 +42,15 @@ all_helix_data <- all_helix_data[rep(1:length(base_names),
                                      each = 2) + (0:1) * length(base_names)]
 
 
+
+##### PLOT CORRELATIONS
+# Understand how the helix traces relate to one another
+
 my_palette <- colorRampPalette(c("blue", "white", "red"))(n = 50)
+
+# truncate the first few hundred frames to get equilibrated structure
 truncate_first <- create_truncated_indices(500)
+
 pdf("figs/correlation_heatmap.pdf", width=6, height=6)
 pheatmap(cor(apply(all_helix_data[truncate_first,],
              2, rolling_average, 50)),
@@ -59,11 +63,16 @@ result_list = list()
 data_list = list()
 par(mfrow=c(1,1))
 
+# Use rolling average over 50 frames, truncate
+# first 500 frames to get equilibrated structure
 average_helix_data = apply(all_helix_data[truncate_first,], 2, 
                            rolling_average, 50)
 
+# Run analysis for each helix trace
 for (base_name in base_names) {
   vals_per_run = dim(average_helix_data)[1]/5
+  
+  # Printing the helix trace into a plot
   for (run_num in c(1:5)) {
     rows_of_interest = (1+(run_num-1)*vals_per_run):(run_num*vals_per_run)
     
@@ -107,8 +116,9 @@ for (base_name in base_names) {
   result_list[[base_name]] = swap_count
 }
 
-result_df = sapply(data.frame(result_list), as.numeric)
 
+### COLLATE RESULTS
+result_df = sapply(data.frame(result_list), as.numeric)
 
 ggplot_results <- data.frame(
   compound = c(rep("8",4),rep("7",4),"none", "none"),
@@ -137,6 +147,10 @@ ggplot_reshaped$orientation <- factor(ggplot_reshaped$orientation,
 ggplot_reshaped$DNA <- factor(ggplot_reshaped$DNA,
                                       levels=c("absent","present"))
 
+
+##### PLOT FIGURES
+
+### SWAPS BY DNA
 p <- ggplot(ggplot_reshaped, aes(x=DNA, y=swaps)) + 
   ylim(0, 260) + 
   geom_boxplot(width=0.1) + 
@@ -149,6 +163,8 @@ p <- ggplot(ggplot_reshaped, aes(x=DNA, y=swaps)) +
 print(p)
 ggsave("figs/swaps_by_DNA.pdf", width = 5, height = 4)
 
+
+### SWAPS BY COMPOUND
 ggplot_reshaped$compound_and_orientation = paste0(
   ggplot_reshaped$compound, "_", ggplot_reshaped$orientation
 )
@@ -181,7 +197,6 @@ p <- ggplot(ggplot_reshaped, aes(x=compound_and_orientation,
            label.size=6
   )
 print(p)
-
-ggsave("figs/swaps_by_compound.pdf", width = 6, height = 4)
+ggsave("figs/swaps_by_compound.pdf", width = 8, height = 4)
 
 dev.off()
