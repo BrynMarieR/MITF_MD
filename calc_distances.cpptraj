@@ -1,0 +1,17 @@
+parm ./prot_UNL.prmtop
+trajin ./run_1/image.nc 1 last 1
+trajin ./run_2/image.nc 1 last 1
+trajin ./run_3/image.nc 1 last 1
+trajin ./run_4/image.nc 1 last 1
+trajin ./run_5/image.nc 1 last 1
+strip :WAT,Na+,K+,Cl-
+distance twohelix :45@CA :77@CA out helix1.out
+distance twohelix2 :135@CA :167@CA out helix2.out 
+atomicfluct RMSF1 out rmsf.out @C,N,O,CA,CB&!@H= byres
+rms first mass @C,CA,N,CB
+average crdset MyAvg
+run
+rms ref MyAvg
+atomicfluct out rmsf.out @C,CA,N,CB byres
+align :186-191,202-207&!@H= mass first 
+rms ToFirst @C,CA,CB,N,O&!@H= first out rmsd1_dna.agr mass
