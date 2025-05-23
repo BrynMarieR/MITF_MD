@@ -178,7 +178,7 @@ p <- ggplot(ggplot_reshaped, aes(x=compound_and_orientation,
                                  y=swaps, fill=orientation)) + 
   xlab("compound and orientation") + 
   geom_boxplot() + 
-  scale_fill_manual(values=c("grey", "orange", "forestgreen")) + 
+  scale_fill_manual(values=c("grey", "orange", "dodgerblue2")) + 
   theme_pubr(base_size=20) + 
   theme(axis.ticks = element_blank()) +
   scale_x_discrete(labels=c("none_none" = "no ligand", 
