@@ -1,0 +1,9 @@
+parm prot_UNL.prmtop
+parm MITF_withdna_cpd7_orient1.pdb
+reference MITF_withdna_cpd7_orient1.pdb
+loadcrd prod.nc prod
+crdaction prod autoimage
+crdaction prod rms reference mass @CA,C,N
+crdout prod image.nc
+crdaction prod strip :WAT,Na+,K+,Cl-
+crdaction prod average avg.pdb nowrap

@@ -1,0 +1,6 @@
+parm prot_UNL.prmtop
+trajin image.nc 1 last 1
+strip :WAT,Na+,K+,Cl-
+minimage MinImProt :1-213 :1-213 out min_image_distance.dat
+go
+
