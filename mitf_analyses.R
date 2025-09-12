@@ -9,8 +9,8 @@ source("utils.R")
 #### LOGIC
 
 # read in the data for each helix trace
-data_dirs <- paste0("./distance_files05072025/", 
-       list.files("./distance_files05072025"))
+data_dirs <- paste0("./Source_Data/", 
+       list.files("./Source_Data"))
 
 helix1_data <- data.frame(lapply(data_dirs, function(x) {
   f1 <- read.delim(paste0(x,"/helix1.out"), skip=0,
