@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/984880242.svg)](https://doi.org/10.5281/zenodo.17611056)
+
 # MITF_MD
 Molecular dynamics experiments for MITF
 
